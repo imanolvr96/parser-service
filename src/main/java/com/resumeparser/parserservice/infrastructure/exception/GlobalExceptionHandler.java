@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -34,15 +36,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NlpProcessingException.class)
     public ResponseEntity<Object> handleNlpProcessingException(NlpProcessingException ex) {
         log.error("NLP processing error: {}", ex.getMessage(), ex);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        response.put("errorCode", ex.getErrorCode());
+        response.put("context", "Error during NLP processing for file: " + ex.getContext());
 
-        return new ResponseEntity<>(
-                new Object() {
-                    public final String message = ex.getMessage();
-                    public final String errorCode = ex.getErrorCode();
-                    public final String context = "Error during NLP processing for file: " + ex.getContext();
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)

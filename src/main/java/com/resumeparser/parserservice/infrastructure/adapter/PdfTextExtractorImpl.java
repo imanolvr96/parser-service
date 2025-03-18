@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Slf4j
-public class PdfBoxPdfExtractor implements PdfTextExtractor {
+public class PdfTextExtractorImpl implements PdfTextExtractor {
 
     @Override
     public String extractTextFromPdf(String filePath) {
