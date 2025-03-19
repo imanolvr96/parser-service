@@ -1,20 +1,20 @@
 steps:
-  - name: 'gcr.io/cloud-builders/mvn'
-    args: [ 'clean', 'package', '-DskipTests' ]
-
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
+  - name: 'maven:3.8.1-openjdk-23'
+    id: Build
     args:
-      - 'run'
-      - 'deploy'
-      - 'parse-service'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/parse-service'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
+      - 'mvn'
+      - 'clean'
+      - 'package'
+      - '--batch-mode'
+      - '-DskipTests'
+      - '-Dhttp.keepAlive=false'
+      - '-f=pom.xml'
+      - '--quiet'
 
-images:
-  - 'gcr.io/$PROJECT_ID/parse-service'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'deploy'
+      - '--project'
+      - '${PROJECT_ID}'
+
+timeout: '1200s'
