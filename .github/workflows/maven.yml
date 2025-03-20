@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Deploy to Google Cloud Run
 
 on:
   push:
@@ -20,4 +20,25 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: ./mvnw clean package -DskipTests
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for Google Artifact Registry
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cv-extractor-repo/cv-extractor:latest .
+          docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cv-extractor-repo/cv-extractor:latest
+
+      - name: Deploy to Google Cloud Run
+        run: |
+          gcloud run deploy cv-extractor \
+            --image europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cv-extractor-repo/cv-extractor:latest \
+            --platform managed \
+            --region europe-west1 \
+            --allow-unauthenticated
