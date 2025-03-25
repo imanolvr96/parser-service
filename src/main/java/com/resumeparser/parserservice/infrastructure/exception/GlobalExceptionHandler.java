@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NlpProcessingException.class)
     public ResponseEntity<Object> handleNlpProcessingException(NlpProcessingException ex) {
         log.error("NLP processing error: {}", ex.getMessage(), ex);
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
         response.put("errorCode", ex.getErrorCode());
@@ -49,5 +50,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGenericException(Exception ex) {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<String> handleMultipartException(MultipartException ex) {
+        log.warn("Multipart file upload error: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File upload failed: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Invalid argument: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

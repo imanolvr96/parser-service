@@ -29,14 +29,14 @@ class PdfTextExtractorImplTest {
     @Test
     void testExtractTextFromPdf_fileNotFound() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            pdfTextExtractor.extractTextFromPdf(nonExistentFile.toString());
+            pdfTextExtractor.extractTextFromPdfFile(nonExistentFile.toString());
         });
         assertEquals("File not found: " + nonExistentFile.toString(), exception.getMessage());
     }
 
     @Test
     void testExtractTextFromPdf_successfulExtraction() {
-        String result = pdfTextExtractor.extractTextFromPdf(testPdfPath.toString());
+        String result = pdfTextExtractor.extractTextFromPdfFile(testPdfPath.toString());
 
         assertNotNull(result, "Extracted text should not be null");
     }
@@ -44,7 +44,7 @@ class PdfTextExtractorImplTest {
     @Test
     void testExtractTextFromPdf_errorExtractingText() {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            pdfTextExtractor.extractTextFromPdf(validPdfPath.toString());
+            pdfTextExtractor.extractTextFromPdfFile(validPdfPath.toString());
         });
 
         assertEquals("Error extracting text from PDF file: " + validPdfPath, exception.getMessage());

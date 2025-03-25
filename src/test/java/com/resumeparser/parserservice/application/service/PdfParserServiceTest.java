@@ -39,10 +39,10 @@ class PdfParserServiceTest {
         String extractedText = "extracted text from pdf";
         Resume mockResume = new Resume("Extracted text from PDF".getBytes());
 
-        when(pdfTextExtractor.extractTextFromPdf(filePath)).thenReturn(extractedText);
+        when(pdfTextExtractor.extractTextFromPdfFile(filePath)).thenReturn(extractedText);
         when(nlpClient.processResume(extractedText)).thenReturn(mockResume);
 
-        Resume result = pdfParserService.extractTextFromPdf(filePath);
+        Resume result = pdfParserService.extractTextFromPdfFile(filePath);
 
         assertNotNull(result);
         assertEquals(mockResume, result);
@@ -53,10 +53,10 @@ class PdfParserServiceTest {
         String filePath = "/valid/path/to/pdf";
         String extractedText = "extracted text from pdf";
 
-        when(pdfTextExtractor.extractTextFromPdf(filePath)).thenReturn(extractedText);
+        when(pdfTextExtractor.extractTextFromPdfFile(filePath)).thenReturn(extractedText);
         when(nlpClient.processResume(extractedText)).thenThrow(FeignException.class);
 
-        NlpProcessingException thrown = assertThrows(NlpProcessingException.class, () -> pdfParserService.extractTextFromPdf(filePath));
+        NlpProcessingException thrown = assertThrows(NlpProcessingException.class, () -> pdfParserService.extractTextFromPdfFile(filePath));
 
         assertEquals("Failed to process the text with the NLP service", thrown.getMessage());
     }
@@ -65,8 +65,8 @@ class PdfParserServiceTest {
     void testExtractTextFromPdf_ShouldCallFilePathValidator_WhenFilePathIsValid() {
         String filePath = "/valid/path/to/pdf";
 
-        FilePathValidator.validate(filePath);
+        FilePathValidator.validateFilePath(filePath);
 
-        FilePathValidator.validate(filePath);
+        FilePathValidator.validateFilePath(filePath);
     }
 }

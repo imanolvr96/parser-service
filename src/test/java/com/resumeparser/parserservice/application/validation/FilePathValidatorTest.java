@@ -14,7 +14,7 @@ class FilePathValidatorTest {
     @Test
     void testValidate_ShouldThrowException_WhenFilePathIsNull() {
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            FilePathValidator.validate(null);
+            FilePathValidator.validateFilePath(null);
         });
 
         assertEquals("File path cannot be null or empty", thrown.getMessage());
@@ -23,7 +23,7 @@ class FilePathValidatorTest {
     @Test
     void testValidate_ShouldThrowException_WhenFilePathIsEmpty() {
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            FilePathValidator.validate(" ");
+            FilePathValidator.validateFilePath(" ");
         });
 
         assertEquals("File path cannot be null or empty", thrown.getMessage());
@@ -32,7 +32,7 @@ class FilePathValidatorTest {
     @Test
     void testValidate_ShouldNotThrowException_WhenFilePathIsValid() {
         assertDoesNotThrow(() -> {
-            FilePathValidator.validate("/valid/path/to/file");
+            FilePathValidator.validateFilePath("/valid/path/to/file");
         });
     }
 }

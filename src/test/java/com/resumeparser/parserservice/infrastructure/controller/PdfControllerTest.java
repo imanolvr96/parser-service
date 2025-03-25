@@ -37,9 +37,9 @@ class PdfControllerTest {
         byte[] mockPdfContent = "Extracted text from PDF".getBytes();
         Resume mockResume = new Resume(mockPdfContent);
 
-        when(pdfParserService.extractTextFromPdf(filePath)).thenReturn(mockResume);
+        when(pdfParserService.extractTextFromPdfFile(filePath)).thenReturn(mockResume);
 
-        ResponseEntity<Resume> response = pdfController.extractPdfContent(filePath);
+        ResponseEntity<Resume> response = pdfController.extractTextFromPdfFile(filePath);
 
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
         assertNotNull(response.getBody());
