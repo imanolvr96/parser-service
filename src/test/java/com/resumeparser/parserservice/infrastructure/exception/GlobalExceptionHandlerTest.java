@@ -1,13 +1,12 @@
 package com.resumeparser.parserservice.infrastructure.exception;
 
-import com.resumeparser.parserservice.application.service.PdfParserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,9 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
-
-    @Mock
-    private PdfParserService pdfParserService;
 
     @InjectMocks
     private GlobalExceptionHandler globalExceptionHandler;
@@ -69,7 +65,7 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
         Object body = response.getBody();
-        
+
         assertNotNull(body);
     }
 
@@ -83,5 +79,29 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("Unexpected error: Unexpected error", response.getBody());
+    }
+
+    @Test
+    void testHandleMultipartException() {
+        MultipartException exception = new MultipartException("File upload failed");
+
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+
+        ResponseEntity<String> response = handler.handleMultipartException(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("File upload failed: File upload failed", response.getBody());
+    }
+
+    @Test
+    void testHandleIllegalArgumentException() {
+        IllegalArgumentException exception = new IllegalArgumentException("Invalid file path");
+
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+
+        ResponseEntity<String> response = handler.handleIllegalArgumentException(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid file path", response.getBody());
     }
 }

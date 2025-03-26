@@ -1,16 +1,14 @@
 # Parser Service
 
-**Parser Service** is a microservice designed to extract key information from resumes in PDF format. It uses Natural
-Language Processing (NLP) techniques to identify and structure relevant data such as name, work experience, education,
-skills, and more.
+**Parser Service** is a microservice designed to extract text from resumes in PDF format. It uses a text extractor to
+read the content of the PDF and then sends the extracted text to an NLP service for processing and structuring relevant
+data such as name, work experience, education, skills, and more.
 
 ## Technologies Used
 
 - **Java 23**: Main programming language.
 - **Spring Boot**: Framework used to build the application.
 - **Apache PDFBox**: Library for reading and extracting content from PDF files.
-- **NLP**: Natural Language Processing techniques and libraries (like Spacy, OpenNLP, etc.) for extracting structured
-  data from text.
 
 ## Installation
 

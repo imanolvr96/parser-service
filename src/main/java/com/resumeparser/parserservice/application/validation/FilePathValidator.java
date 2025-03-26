@@ -3,6 +3,17 @@ package com.resumeparser.parserservice.application.validation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
+/**
+ * Utility class that provides methods to validate file paths and files (specifically PDF files).
+ * Ensures that file paths are not null or empty and that uploaded files are not null, not empty,
+ * and have a valid PDF extension.
+ * <p>
+ * The validation methods throw an IllegalArgumentException if the input does not meet the expected conditions.
+ * This class is used to ensure proper file handling before processing PDF files in the application.
+ * </p>
+ */
 @Slf4j
 public class FilePathValidator {
 
@@ -38,7 +49,7 @@ public class FilePathValidator {
             throw new IllegalArgumentException("File cannot be empty.");
         }
 
-        String fileExtension = getFileExtension(file.getOriginalFilename());
+        String fileExtension = getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
         if (!"pdf".equalsIgnoreCase(fileExtension)) {
             log.warn("Invalid file extension provided: {}", file.getOriginalFilename());
             throw new IllegalArgumentException("Only PDF files are allowed.");
@@ -54,7 +65,7 @@ public class FilePathValidator {
      * @return the file extension (e.g., "pdf")
      */
     private static String getFileExtension(String filename) {
-        if (filename == null || !filename.contains(".")) {
+        if (!filename.contains(".")) {
             return "";
         }
         return filename.substring(filename.lastIndexOf('.') + 1);

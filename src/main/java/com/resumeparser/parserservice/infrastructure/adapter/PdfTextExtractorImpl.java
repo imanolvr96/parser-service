@@ -10,6 +10,26 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+/**
+ * Implementation of the PdfTextExtractor interface for extracting text from PDF files.
+ * <p>
+ * This class provides functionality to extract text from PDFs in two ways:
+ * 1. From a file path (using the file system).
+ * 2. From an uploaded MultipartFile (used in HTTP requests).
+ * <p>
+ * The extraction process is handled by using Apache PDFBox to load and parse the PDF content,
+ * and PDFTextStripper is used to extract the text. Common logic for text extraction is centralized
+ * in a private method to avoid code duplication.
+ * <p>
+ * The following methods are available:
+ * - extractTextFromPdfFile: Extracts text from a file given its file path.
+ * - extractTextFromMultipartFile: Extracts text from a file uploaded as a MultipartFile.
+ * <p>
+ * The implementation also handles errors during the extraction process and logs meaningful messages
+ * to aid debugging.
+ *
+ * @see PdfTextExtractor
+ */
 @Slf4j
 public class PdfTextExtractorImpl implements PdfTextExtractor {
 

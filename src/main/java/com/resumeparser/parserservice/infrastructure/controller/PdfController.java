@@ -11,6 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Controller responsible for handling PDF text extraction requests.
+ * Provides endpoints to extract text from a PDF file either by providing a file path or uploading a PDF file.
+ * The extracted text is then processed by the PdfParserService and returned as a Resume object.
+ * <p>
+ * Endpoints:
+ * - /pdf/extract-text-from-file: Extracts text from a given PDF file path.
+ * - /pdf/extract-text-from-upload: Extracts text from an uploaded PDF file.
+ * <p>
+ * The controller relies on the PdfParserService for the core extraction logic.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/pdf")

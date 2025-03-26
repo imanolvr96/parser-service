@@ -2,7 +2,9 @@ package com.resumeparser.parserservice.application.validation;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,27 +14,69 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class FilePathValidatorTest {
 
     @Test
-    void testValidate_ShouldThrowException_WhenFilePathIsNull() {
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            FilePathValidator.validateFilePath(null);
-        });
+    void testValidateFilePathNull() {
+        Executable executable = () -> FilePathValidator.validateFilePath(null);
 
-        assertEquals("File path cannot be null or empty", thrown.getMessage());
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("File path cannot be null or empty", exception.getMessage());
     }
 
     @Test
-    void testValidate_ShouldThrowException_WhenFilePathIsEmpty() {
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            FilePathValidator.validateFilePath(" ");
-        });
+    void testValidateFilePathEmpty() {
+        Executable executable = () -> FilePathValidator.validateFilePath("");
 
-        assertEquals("File path cannot be null or empty", thrown.getMessage());
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("File path cannot be null or empty", exception.getMessage());
     }
 
     @Test
-    void testValidate_ShouldNotThrowException_WhenFilePathIsValid() {
-        assertDoesNotThrow(() -> {
-            FilePathValidator.validateFilePath("/valid/path/to/file");
-        });
+    void testValidateFilePathValid() {
+        String validFilePath = "path/to/valid/file.pdf";
+
+        assertDoesNotThrow(() -> FilePathValidator.validateFilePath(validFilePath));
+    }
+
+    @Test
+    void testValidateMultipartFileNull() {
+        Executable executable = () -> FilePathValidator.validateMultipartFile(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("File cannot be null.", exception.getMessage());
+    }
+
+    @Test
+    void testValidateMultipartFileEmpty() {
+        MockMultipartFile emptyFile = new MockMultipartFile("file", "empty.pdf", "application/pdf", new byte[0]);
+
+        Executable executable = () -> FilePathValidator.validateMultipartFile(emptyFile);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("File cannot be empty.", exception.getMessage());
+    }
+
+    @Test
+    void testValidateMultipartFileInvalidExtension() {
+        MockMultipartFile invalidFile = new MockMultipartFile("file", "invalid.txt", "text/plain", "Invalid content".getBytes());
+
+        Executable executable = () -> FilePathValidator.validateMultipartFile(invalidFile);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("Only PDF files are allowed.", exception.getMessage());
+    }
+
+    @Test
+    void testValidateMultipartFileValid() {
+        MockMultipartFile validFile = new MockMultipartFile("file", "valid.pdf", "application/pdf", "Valid content".getBytes());
+
+        assertDoesNotThrow(() -> FilePathValidator.validateMultipartFile(validFile));
+    }
+
+    @Test
+    void testValidateMultipartFileNullFilename() {
+        MockMultipartFile invalidFile = new MockMultipartFile("file", null, "application/pdf", "Valid content".getBytes());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> FilePathValidator.validateMultipartFile(invalidFile));
+
+        assertEquals("Only PDF files are allowed.", exception.getMessage());
     }
 }

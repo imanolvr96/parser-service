@@ -11,6 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Service class for parsing PDF files, extracting text, and processing it with NLP.
+ * <p>
+ * This service provides methods to extract text from PDF files (either from file paths
+ * or uploaded as multipart files) and processes the extracted text using an NLP service
+ * to generate a structured resume object.
+ * </p>
+ * <p>
+ * The class requires a {@link PdfTextExtractor} for text extraction and an {@link NlpClient}
+ * for processing the extracted text using NLP techniques.
+ * </p>
+ *
+ * @Slf4j Enables logging for the class
+ * @Service Marks the class as a Spring service
+ */
 @Slf4j
 @Service
 public class PdfParserService {
