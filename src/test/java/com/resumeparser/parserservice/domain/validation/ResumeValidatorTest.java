@@ -14,17 +14,13 @@ class ResumeValidatorTest {
 
     @Test
     void testValidate_ShouldThrowException_WhenResumeIsNull() {
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            ResumeValidator.validate(null);
-        });
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> ResumeValidator.validate(null));
 
         assertEquals("Resume parsing failed. Received null response.", thrown.getMessage());
     }
 
     @Test
     void testValidate_ShouldNotThrowException_WhenResumeIsNotNull() {
-        assertDoesNotThrow(() -> {
-            ResumeValidator.validate(new Resume("Extracted text from PDF".getBytes()));
-        });
+        assertDoesNotThrow(() -> ResumeValidator.validate(new Resume("Extracted text from PDF".getBytes())));
     }
 }
